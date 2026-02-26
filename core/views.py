@@ -3,7 +3,7 @@ from django.contrib import messages
 from .forms import SalaoCadastroForm
 from .models import DiaFuncionamento, Salao, Produto
 from django.contrib.auth.hashers import make_password, check_password
-from .models import Profissional
+from .models import Profissional, Corte
 from .forms import ProfissionalForm
 
 def home(request):
@@ -381,3 +381,102 @@ def configurar_dias(request):
 def logout_view(request):
     request.session.flush()
     return redirect('home')
+
+
+
+# Metodos de Cortes
+
+def cortes(request):
+    salao_id = request.session.get('salao_id')
+    if not salao_id:
+        return redirect("login")
+    
+    salao = Salao.objects.get(id=salao_id)
+    cortes = Corte.objects.filter(salao=salao)
+
+    return render(request,'dashboard.html',{
+        'salao':salao,
+        'cortes':cortes,
+        'pagina':'cortes'
+    })
+
+def salvar_corte(request):
+    salao_id = request.session.get("salao_id")
+    if not salao_id:
+        return redirect('login')
+    
+    salao = Salao.objects.get(id=salao_id)
+    if request.method == "POST":
+        corte_id = request.POST.get("corte_id")
+        nome = request.POST.get("nome")
+        valor = request.POST.get('valor')
+        descricao = request.POST.get('descricao')
+        tempo_execucao = request.POST.get('tempo_execucao')
+        foto = request.FILES.get("foto")
+
+        if corte_id:
+            corte = get_object_or_404(Corte, id=corte_id, salao=salao)
+            corte.nome = nome
+            corte.valor = valor
+            corte.descricao = descricao
+            corte.tempo_execucao = tempo_execucao
+
+            if foto:
+                corte.foto = foto
+            corte.save()
+        else : 
+            Corte.objects.create(
+                salao=salao,
+                nome=nome,
+                valor=valor,
+                descricao=descricao,
+                tempo_execucao=tempo_execucao,
+                foto=foto
+            )
+    return redirect("cortes")
+
+
+def editar_corte(request, id):
+    salao_id = request.session.get("salao_id")
+    if not salao_id:
+        return redirect("login")
+    
+    salao = Salao.objects.get(id=salao_id)
+    corte = get_object_or_404(Corte, id=id, salao=salao)
+    cortes = Corte.objects.filter(salao=salao)
+
+    return render(request,'dashboard.html',{
+        'salao': salao,
+        'cortes': cortes,
+        'corte_editar': corte,
+        'pagina':'cortes'
+    })
+
+
+def excluir_corte(request,id):
+    salao_id = request.session.get("salao_id")
+    if not salao_id:
+        return redirect("login")
+    
+    salao = Salao.objects.get(id=salao_id)
+    corte = get_object_or_404(Corte, id=id, salao=salao)
+    corte.delete()
+    return redirect("cortes")
+
+
+def toggle_corte(request, id):
+    if request.method == 'POST':
+        salao_id = request.session.get('salao_id')
+        if not salao_id:
+            return JsonResponse({'error': 'Não autorizado'}, status=403)
+        
+        corte = get_object_or_404(Corte,id=id, salao_id=salao_id)
+
+        corte.ativo = not corte.ativo
+        corte.save()
+
+        return JsonResponse({
+            'success': True,
+            'ativo': corte.ativo
+        })
+    return JsonResponse({'erro': 'Metodo inválido'}, status=400)

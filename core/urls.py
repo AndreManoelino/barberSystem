@@ -17,11 +17,17 @@ urlpatterns = [
     path('produtos/cadastrar/', views.cadastrar_produto, name='cadastrar_produto'),
     path('produtos/excluir/<int:id>/', views.excluir_produto, name='excluir_produto'),
 
-    # 👇 ADICIONE ESSA
+    
     path('dias/configurar/', views.configurar_dias, name='configurar_dias'),
 
     path('dias/toggle/<int:dia_id>/', views.toggle_dia_funcionamento, name='toggle_dia_funcionamento'),
     path('dias/atualizar/<int:dia_id>/', views.atualizar_horario_dia, name='atualizar_horario_dia'),
-
+    
+    path('cortes/', views.cortes, name='cortes'),
+    path('cortes/salvar/', views.salvar_corte, name='salvar_corte'),
+    path('cortes/editar/<int:id>/', views.editar_corte, name='editar_corte'),
+    path('cortes/excluir/<int:id>/', views.excluir_corte, name='excluir_corte'),
+    path('cortes/toggle/<int:id>/', views.toggle_corte, name='toggle_corte'),
+    
     path('logout/', views.logout_view, name='logout'),
 ]

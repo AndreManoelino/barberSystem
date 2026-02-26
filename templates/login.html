@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -8,297 +9,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-primary: #0f0f23;
-            --bg-secondary: #1a1a2e;
-            --glass-primary: rgba(255, 255, 255, 0.06);
-            --glass-secondary: rgba(255, 255, 255, 0.04);
-            --accent: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --accent-glow: rgba(102, 126, 234, 0.3);
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --border-glass: rgba(255, 255, 255, 0.1);
-        }
+    <link rel="stylesheet" href="{% static 'assets/css/login/login.css' %}">
 
-        * {
-            font-family: 'Inter', -apple-system, sans-serif;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #16213e 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
-            animation: float 20s ease-in-out infinite;
-            z-index: -1;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-20px) rotate(120deg); }
-            66% { transform: translateY(10px) rotate(240deg); }
-        }
-
-        .login-container {
-            width: 100%;
-            max-width: 440px;
-            padding: 2rem;
-        }
-
-        .login-card {
-            background: var(--glass-primary);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid var(--border-glass);
-            border-radius: 32px;
-            padding: 3rem 2.5rem;
-            box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 32px 32px 0 0;
-        }
-
-        .login-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 
-                0 35px 70px -12px rgba(0, 0, 0, 0.6),
-                0 0 0 1px rgba(255, 255, 255, 0.08);
-        }
-
-        .logo-section {
-            text-align: center;
-            margin-bottom: 2.5rem;
-            padding-bottom: 2rem;
-            position: relative;
-        }
-
-        .logo-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--accent);
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
-            backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
-        }
-
-        .logo-icon:hover {
-            transform: rotate(10deg) scale(1.05);
-        }
-
-        .logo-icon i {
-            font-size: 2rem;
-            color: white;
-        }
-
-        .login-title {
-            font-size: 2.25rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--text-primary), #e2e8f0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.025em;
-        }
-
-        .login-subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            font-weight: 400;
-        }
-
-        .form-floating {
-            position: relative;
-            margin-bottom: 1.75rem;
-        }
-
-        .form-control {
-            background: var(--glass-secondary);
-            border: 1px solid var(--border-glass);
-            border-radius: 20px;
-            padding: 1.25rem 1.5rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            backdrop-filter: blur(20px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 64px;
-        }
-
-        .form-control::placeholder {
-            color: rgba(203, 213, 225, 0.6);
-        }
-
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(102, 126, 234, 0.6);
-            box-shadow: 
-                0 0 0 4px rgba(102, 126, 234, 0.15),
-                0 8px 32px rgba(102, 126, 234, 0.2);
-            color: var(--text-primary);
-            transform: translateY(-1px);
-        }
-
-        .form-floating > label {
-            color: var(--text-secondary);
-            font-weight: 500;
-            padding-left: 1.5rem;
-            transform-origin: 0 0.75rem;
-        }
-
-        .btn-login {
-            background: var(--accent);
-            border: none;
-            border-radius: 20px;
-            padding: 1.25rem 2rem;
-            font-size: 1.05rem;
-            font-weight: 700;
-            height: 64px;
-            width: 100%;
-            color: white;
-            backdrop-filter: blur(20px);
-            box-shadow: 
-                0 12px 32px rgba(102, 126, 234, 0.4),
-                0 4px 16px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-login::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-login:hover::before {
-            left: 100%;
-        }
-
-        .btn-login:hover {
-            transform: translateY(-3px);
-            box-shadow: 
-                0 20px 48px rgba(102, 126, 234, 0.5),
-                0 8px 24px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-login:active {
-            transform: translateY(-1px);
-        }
-
-        .divider {
-            position: relative;
-            margin: 2.5rem 0;
-            text-align: center;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: var(--border-glass);
-        }
-
-        .divider span {
-            background: var(--glass-primary);
-            padding: 0 1.5rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .signup-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .signup-link:hover {
-            color: #a5b4fc;
-            text-decoration: underline;
-        }
-
-        .alert {
-            border: none;
-            border-radius: 16px;
-            backdrop-filter: blur(20px);
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 480px) {
-            .login-container {
-                padding: 1rem;
-                margin: 1rem;
-            }
-            
-            .login-card {
-                padding: 2rem 1.5rem;
-                margin: 1rem;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
             <!-- Logo & Title -->
-            <div class="logo-section">
-                <div class="logo-icon">
-                    <i class="fas fa-key-skeleton"></i>
-                </div>
-                <h1 class="login-title">Bem-vindo de volta</h1>
-                <p class="login-subtitle">Acesse sua conta para continuar</p>
+        <div class="logo-section">
+            <div class="logo-icon">
+                <!-- SUBSTITUA o ícone pelo logo -->
+                <img src="{% static 'img/logo.jpeg' %}" alt="BarberSystem" class="logo-img">
             </div>
+            <h1 class="login-title">Bem-vindo de volta</h1>
+            <p class="login-subtitle">Acesse sua conta para continuar</p>
+        </div>
+
 
             <!-- Messages -->
             {% if messages %}
@@ -317,15 +43,13 @@
                 <div class="form-floating">
                     <input type="email" name="email" class="form-control" id="email" placeholder="email@exemplo.com" required>
                     <label for="email">Email</label>
-                    <i class="fas fa-envelope position-absolute top-50 start-16 translate-middle-y text-muted pe-3"></i>
+                    
                 </div>
 
                 <div class="form-floating">
                     <input type="password" name="senha" class="form-control" id="senha" placeholder="Senha" required>
                     <label for="senha">Senha</label>
-                    <i class="fas fa-lock position-absolute top-50 start-16 translate-middle-y text-muted pe-3"></i>
-                </div>
-
+                   
                 <button type="submit" class="btn btn-login">
                     <i class="fas fa-arrow-right me-2"></i>
                     Entrar

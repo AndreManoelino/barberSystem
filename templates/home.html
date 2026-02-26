@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
+
 <!-- Hero Section -->
 <section id="home" class="hero-section d-flex align-items-center text-white">
     <div class="container">
@@ -16,12 +17,12 @@
                 </div>
             </div>
             <div class="col-lg-6 text-center">
-                <img src="https://images.unsplash.com/photo-1574169208507-84376144848b?w=500&fit=crop" 
-                     class="img-fluid rounded-4 shadow-lg" alt="Dashboard Barber-System" style="max-height: 500px;">
+                <img src="{% static 'img/logo.jpeg' %}" alt="BarberSystem" class="barber-logo-custom">
             </div>
         </div>
     </div>
 </section>
+
 
 <!-- Sobre -->
 <section id="sobre" class="py-5 bg-gradient-to-br from-slate-50 to-white">

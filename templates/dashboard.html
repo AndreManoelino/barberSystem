@@ -243,6 +243,7 @@
             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalListaProfissionais"><i class="fas fa-users me-3"></i>Profissionais</a>
             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalListaProdutos"><i class="fas fa-box me-3"></i>Produtos</a>
             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalListaDiasFuncionamento"><i class="fas fa-box me-3"></i>Dias / Horarios</a>
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalCortes"><i class="fas fa-scissors me-3"></i>Cortes</a>
             <a class="nav-link" href="#"><i class="fas fa-calendar me-3"></i>Agenda</a>
             <a class="nav-link" href="#"><i class="fas fa-tags me-3"></i>Serviços</a>
             <a class="nav-link" href="#"><i class="fas fa-chart-simple me-3"></i>Relatórios</a>
@@ -283,7 +284,7 @@
                         <div class="stat-icon bg-emerald-500/20 border border-emerald-500/30 mb-3">
                             <i class="fas fa-user-tie text-emerald-400 fs-5"></i>
                         </div>
-                        <h2 class="h2 fw-bold text-white mb-1">{{ salao.profissionais_cadastrados.count }}</h2>
+                        <h2 class="h2 fw-bold text-white mb-1">{{ salao.profissionais.count }}</h2>
                         <p class="text-white mb-1">Profissionais</p>
                     </div>
                 </div>
@@ -292,7 +293,7 @@
                         <div class="stat-icon bg-blue-500/20 border border-blue-500/30 mb-3">
                             <i class="fas fa-clock text-blue-400 fs-5"></i>
                         </div>
-                        <h2 class="h2 fw-bold text-white mb-1">{{ dias_disponiveis }}</h2>
+                        <h2 class="h2 fw-bold text-white mb-1">{{ salao.dias_disponiveis.filter }}</h2>
                         <p class="text-muted mb-0">Dias Abertos</p>
                     </div>
                 </div>
@@ -322,6 +323,20 @@
                         </div>
                         <h2 class="h2 fw-bold text-white mb-1">{{ salao.produtos.count }}</h2>
                         <p class="text-white mb-0">Produtos</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="stat-card h-100" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#modalCortes"
+                        style="cursor:pointer;">
+                        <div class="stat-icon bg-blue-500/20 border border-blue-500/30 mb-3">
+                            <i class="fas fa-scissors text-blue-400 fs-5"></i>
+                        </div>
+                        <h2 class="h2 fw-bold text-white mb-1">
+                            {{ salao.cortes.count }}
+                        </h2>
+                        <p class="text-white mb-0">Cortes</p>
                     </div>
                 </div>
             </div>
@@ -555,7 +570,7 @@
                         {% for dia in salao.dias_funcionamento.all %}
                         <div class="col-lg-4 col-md-6">
                             <div class="p-4 rounded-4 text-center"
-                                style="background: rgba(255,255,255,0.05);
+                                style="background: rgba(224, 219, 219, 0.865);
                                         border:1px solid rgba(148,163,184,0.2);
                                         cursor:pointer;"
                                 onclick="editarDia(
@@ -582,7 +597,7 @@
                                     <span class="badge bg-danger mb-2">Fechado</span>
                                 {% endif %}
 
-                                <small class="text-muted d-block">
+                                <small class="text-white mb-0">
                                     {{ dia.horario_inicio|time:"H:i" }} -
                                     {{ dia.horario_fim|time:"H:i" }}
                                 </small>
@@ -654,6 +669,103 @@
 
                     <div class="text-start mt-3">
                         <button type="button" id="btnToggleDia" class="btn" onclick="toggleDiaAtivo()"></button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCortes" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content bg-dark text-white">
+
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title">Gerenciar Cortes</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <!-- FORMULÁRIO -->
+                    <form method="POST" action="{% url 'salvar_corte' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="corte_id" value="{{ corte_editar.id|default:'' }}">
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label>Nome do Corte</label>
+                                <input type="text" name="nome" class="form-control"
+                                    value="{{ corte_editar.nome|default:'' }}" required>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label>Valor</label>
+                                <input type="number" step="0.01" name="valor" class="form-control"
+                                    value="{{ corte_editar.valor|default:'' }}" required>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label>Tempo Execução (min)</label>
+                                <input type="number" name="tempo_execucao" class="form-control"
+                                    value="{{ corte_editar.tempo_execucao|default:'' }}" required>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label>Foto</label>
+                                <input type="file" name="foto" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Descrição</label>
+                            <textarea name="descricao" class="form-control">{{ corte_editar.descricao|default:'' }}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">
+                            {% if corte_editar %}Atualizar Corte{% else %}Cadastrar Corte{% endif %}
+                        </button>
+                    </form>
+
+                    <hr class="border-secondary my-4">
+
+                    <!-- LISTA DE CORTES -->
+                    <div class="row">
+                        {% for corte in cortes %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card bg-secondary text-white h-100">
+
+                                {% if corte.foto %}
+                                <img src="{{ corte.foto.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
+                                {% endif %}
+
+                                <div class="card-body">
+                                    <h5>{{ corte.nome }}</h5>
+                                    <p>R$ {{ corte.valor }}</p>
+                                    <p>{{ corte.tempo_execucao }} min</p>
+                                    <p>{{ corte.descricao }}</p>
+                                </div>
+
+                                <div class="card-footer d-flex justify-content-between">
+
+                                    <a href="{% url 'editar_corte' corte.id %}"
+                                    class="btn btn-warning btn-sm">
+                                        Editar
+                                    </a>
+
+                                    <a href="{% url 'excluir_corte' corte.id %}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Deseja excluir este corte?')">
+                                        Excluir
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        {% empty %}
+                            <p>Nenhum corte cadastrado.</p>
+                        {% endfor %}
                     </div>
 
                 </div>
@@ -851,6 +963,35 @@
                 });
             });
         });
+
+        // Scripos de Cortes 
+        
+        function abrirFormularioCorte() {
+            document.getElementById("formCorte").style.display = "block";
+            document.getElementById("corte_id").value = "";
+            document.getElementById("corte_nome").value = "";
+            document.getElementById("corte_valor").value = "";
+            document.getElementById("corte_tempo").value = "";
+            document.getElementById("corte_descricao").value = "";
+        }
+
+        function editarCorte(id, nome, valor, tempo, descricao) {
+            document.getElementById("formCorte").style.display = "block";
+            document.getElementById("corte_id").value = id;
+            document.getElementById("corte_nome").value = nome;
+            document.getElementById("corte_valor").value = valor;
+            document.getElementById("corte_tempo").value = tempo;
+            document.getElementById("corte_descricao").value = descricao;
+        }
+        
+    </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% if pagina == "cortes" %}
+            var modal = new bootstrap.Modal(document.getElementById('modalCortes'));
+            modal.show();
+        {% endif %}
+    });
     </script>
 
 </body>
