@@ -1,0 +1,10 @@
+<h3>Profissionais ({{ total_profissionais }} / {{ limite }})</h3>
+
+{% for p in profissionais %}
+    <div>
+        <strong>{{ p.nome }}</strong>
+        <p>{{ p.descricao }}</p>
+    </div>
+{% empty %}
+    <p>Nenhum profissional cadastrado.</p>
+{% endfor %}
