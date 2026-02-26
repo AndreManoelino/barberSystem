@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section id="home" class="hero-section d-flex align-items-center text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="hero-title mb-4">Barber-System</h1>
+                <p class="hero-subtitle mb-5 pb-3">O sistema completo para salões modernos. Gerencie agendamentos, clientes e finanças com facilidade.</p>
+                <div class="d-flex flex-column flex-sm-row gap-3">
+                    <a href="{% url 'cadastro' %}" class="btn btn-light btn-lg px-5 py-3 fw-bold shadow-lg">
+                        <i class="fas fa-rocket me-2"></i>COMEÇAR AGORA
+                    </a>
+                    <a href="#funcoes" class="btn btn-outline-light btn-lg px-5 py-3 fw-bold">VER FUNCIONALIDADES</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="https://images.unsplash.com/photo-1574169208507-84376144848b?w=500&fit=crop" 
+                     class="img-fluid rounded-4 shadow-lg" alt="Dashboard Barber-System" style="max-height: 500px;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sobre -->
+<section id="sobre" class="py-5 bg-gradient-to-br from-slate-50 to-white">
+    <div class="container">
+        <div class="row justify-content-center text-center mb-5">
+            <div class="col-lg-8">
+                <h2 class="section-title display-5 mb-4">Sobre o Barber-System</h2>
+                <p class="lead text-muted fs-5">Transformamos a gestão de salões em uma experiência simples e lucrativa. Mais de 5.000 barbeiros confiam em nós.</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-chart-line"></i></div>
+                    <h4 class="fw-bold mb-3">Relatórios Completos</h4>
+                    <p class="text-muted">Acompanhe faturamento, serviços mais vendidos e desempenho da equipe em tempo real.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-users"></i></div>
+                    <h4 class="fw-bold mb-3">Gestão de Clientes</h4>
+                    <p class="text-muted">Cadastro completo, histórico de serviços, aniversário e preferências de cada cliente.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-calendar-check"></i></div>
+                    <h4 class="fw-bold mb-3">Agendamento Online</h4>
+                    <p class="text-muted">Clientes agendam pelo WhatsApp ou app. Zero no-show e mais faturamento.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Funções COMPLETA AppBarber -->
+<section id="funcoes" class="py-5 bg-white">
+    <div class="container">
+        <div class="row justify-content-center text-center mb-5">
+            <div class="col-lg-8">
+                <h2 class="section-title display-4 mb-4">Funcionalidades Completas</h2>
+                <p class="lead text-muted fs-5 mb-0">Tudo que seu salão precisa para crescer e fidelizar clientes</p>
+            </div>
+        </div>
+        
+        <!-- Grid 4 colunas RESPONSIVO -->
+        <div class="row g-4">
+            <!-- 1. Lembrete de Horários -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-bell text-warning"></i></div>
+                    <h5 class="fw-bold mb-3">Lembrete de Horários</h5>
+                    <p class="text-muted small">Alertas automáticos via WhatsApp reduzem faltas em 70%</p>
+                </div>
+            </div>
+
+            <!-- 2. Programa de Fidelidade -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-star text-warning"></i></div>
+                    <h5 class="fw-bold mb-3">Programa de Fidelidade</h5>
+                    <p class="text-muted small">Carimbo digital - 10º corte grátis!</p>
+                </div>
+            </div>
+
+            <!-- 3. Envio de Notícias -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-bullhorn text-info"></i></div>
+                    <h5 class="fw-bold mb-3">Notícias e Promoções</h5>
+                    <p class="text-muted small">WhatsApp Business API + SMS Marketing</p>
+                </div>
+            </div>
+
+            <!-- 4. Gestão Financeira -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-chart-pie text-success"></i></div>
+                    <h5 class="fw-bold mb-3">Gestão Financeira</h5>
+                    <p class="text-muted small">Fluxo de caixa, PDV, contas a pagar/receber</p>
+                </div>
+            </div>
+
+            <!-- 5. Pagamento Online -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-credit-card text-primary"></i></div>
+                    <h5 class="fw-bold mb-3">Pagamento Online</h5>
+                    <p class="text-muted small">Pix, cartão e boleto no agendamento</p>
+                </div>
+            </div>
+
+            <!-- 6. Relatórios Gerenciais -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-file-alt text-secondary"></i></div>
+                    <h5 class="fw-bold mb-3">Relatórios Gerenciais</h5>
+                    <p class="text-muted small">PDF/Excel + Dashboard em tempo real</p>
+                </div>
+            </div>
+
+            <!-- 7. Pacotes de Serviços -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-box text-info"></i></div>
+                    <h5 class="fw-bold mb-3">Pacotes de Serviços</h5>
+                    <p class="text-muted small">Combo Corte + Barba + Bigode com desconto</p>
+                </div>
+            </div>
+
+            <!-- 8. Gestão de Estoque -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-warehouse text-success"></i></div>
+                    <h5 class="fw-bold mb-3">Gestão de Estoque</h5>
+                    <p class="text-muted small">Baixa automática por serviço prestado</p>
+                </div>
+            </div>
+
+            <!-- 9. Comandas -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-receipt text-primary"></i></div>
+                    <h5 class="fw-bold mb-3">Comandas de Consumo</h5>
+                    <p class="text-muted small">Consumo interno de produtos/bebidas</p>
+                </div>
+            </div>
+
+            <!-- 10. Aniversariantes -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-birthday-cake text-danger"></i></div>
+                    <h4 class="fw-bold mb-3">Aniversariantes</h4>
+                    <p class="text-muted small">Descontos automáticos no mês de aniversário</p>
+                </div>
+            </div>
+
+            <!-- 11. Lista de Espera -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-list text-info"></i></div>
+                    <h5 class="fw-bold mb-3">Lista de Espera</h5>
+                    <p class="text-muted small">Notifica cliente quando abre vaga</p>
+                </div>
+            </div>
+
+            <!-- 12. Mensagens Automáticas -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-robot text-warning"></i></div>
+                    <h5 class="fw-bold mb-3">Mensagens Automáticas</h5>
+                    <p class="text-muted small">"Volte sempre! Agende seu próximo corte"</p>
+                </div>
+            </div>
+
+            <!-- 13. Pesquisa de Satisfação -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mb-4"><i class="fas fa-comment-dots text-primary"></i></div>
+                    <h5 class="fw-bold mb-3">Pesquisa de Satisfação</h5>
+                    <p class="text-muted small">Nota 1-5 após cada atendimento</p>
+                </div>
+            </div>
+
+            <!-- 14. Comissões -->
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="feature-card text-center h-100 border-primary">
+                    <div class="feature-icon mb-4"><i class="fas fa-dollar-sign text-danger"></i></div>
+                    <h5 class="fw-bold mb-3">Comissões Automáticas</h5>
+                    <p class="text-muted small">Cálculo por faixa + relatório PDF</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Preços COMPACTO 30% OFF -->
+<section id="precos" class="py-4 bg-light">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title h3 mb-2">Planos para Todos os Salões</h2>
+            <div class="badge bg-danger px-3 py-1">
+                <i class="fas fa-tags me-1"></i>30% OFF LIMITADO
+            </div>
+        </div>
+        
+        <div class="row g-3">
+            <!-- Plano 1 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="bg-white p-4 rounded-3 shadow-sm h-100 text-center border">
+                    <div class="h6 fw-bold text-danger mb-3">1 PROFISSIONAL</div>
+                    <div class="mb-3">
+                        <div class="text-decoration-line-through text-muted small">R$ 99,90</div>
+                        <div class="fs-1 fw-bold text-danger">R$ 70,00<small class="fs-6">/mês</small></div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-success fw-bold"><i class="fas fa-arrow-down me-1"></i>-R$ 24,00</small>
+                    </div>
+                    <a href="{% url 'cadastro' %}" class="btn btn-outline-danger w-100 py-2">COMEÇAR GRÁTIS</a>
+                    <div class="mt-2 small text-muted">R$ 670,80/ano</div>
+                </div>
+            </div>
+
+            <!-- Plano 2 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="bg-white p-4 rounded-3 shadow-sm h-100 text-center border">
+                    <div class="h6 fw-bold text-warning mb-3">2-5 PROFISSIONAIS</div>
+                    <div class="mb-3">
+                        <div class="text-decoration-line-through text-muted small">R$ 109,90</div>
+                        <div class="fs-1 fw-bold text-warning">R$ 76,90<small class="fs-6">/mês</small></div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-success fw-bold"><i class="fas fa-arrow-down me-1"></i>-R$ 33,00</small>
+                    </div>
+                    <a href="{% url 'cadastro' %}" class="btn btn-outline-warning w-100 py-2 text-dark">COMEÇAR GRÁTIS</a>
+                    <div class="mt-2 small text-muted">R$ 922,80/ano</div>
+                </div>
+            </div>
+
+            <!-- Plano 3 POPULAR -->
+            <div class="col-lg-3 col-md-6">
+                <div class="bg-white p-4 rounded-3 shadow border-primary position-relative h-100 text-center" style="border: 2px solid #dc3545 !important;">
+                    <div class="position-absolute top-0 end-0 badge bg-success m-2">
+                        <i class="fas fa-star me-1"></i>POPULAR
+                    </div>
+                    <div class="h6 fw-bold text-primary mb-3">6-15 PROFISSIONAIS</div>
+                    <div class="mb-3">
+                        <div class="text-decoration-line-through text-muted small">R$ 164,50</div>
+                        <div class="fs-1 fw-bold text-primary">R$ 115,15<small class="fs-6">/mês</small></div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-success fw-bold"><i class="fas fa-arrow-down me-1"></i>-R$ 49,35</small>
+                    </div>
+                    <a href="{% url 'cadastro' %}" class="btn btn-danger w-100 py-2 fw-bold">COMEÇAR GRÁTIS</a>
+                    <div class="mt-2 small text-muted">R$ 1.381,80/ano</div>
+                </div>
+            </div>
+
+            <!-- Plano 4 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="bg-white p-4 rounded-3 shadow-sm h-100 text-center border">
+                    <div class="h6 fw-bold text-success mb-3">+15 PROFISSIONAIS</div>
+                    <div class="mb-3">
+                        <div class="text-decoration-line-through text-muted small">R$ 219,90</div>
+                        <div class="fs-1 fw-bold text-success">R$ 153,90<small class="fs-6">/mês</small></div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-success fw-bold"><i class="fas fa-arrow-down me-1"></i>-R$ 66,00</small>
+                    </div>
+                    <a href="{% url 'cadastro' %}" class="btn btn-success w-100 py-2 fw-bold">COMEÇAR GRÁTIS</a>
+                    <div class="mt-2 small text-muted">R$ 1.846,80/ano</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
