@@ -8,19 +8,23 @@ logger = logging.getLogger(__name__)
 
 class Salao(models.Model):
     PLANOS = [
-        ('basico', 'Básico (1 profissional)'),
-        ('equipe_pequena', 'Equipe Pequena (2-5 profissionais)'),
-        ('equipe_media', 'Equipe Média (6-15 profissionais)'),
-        ('equipe_grande', 'Equipe Grande (+15 profissionais)'),
+        ('basico', 'Básico (2 profissional)'),
+        ('equipe_pequena', 'Equipe Pequena (5 profissionais)'),
+        ('equipe_media', 'Equipe Média (15 profissionais)'),
+        ('equipe_grande', 'Equipe Grande (30)'),
     ]
     
     nome = models.CharField(max_length=200, unique=True)
     nome_contato = models.CharField(max_length=200)
+    numero = models.CharField(max_length=200)
+    bairro = models.CharField(max_length=100, null=True, blank=True)
+    cep = models.CharField(max_length=20, null=True, blank=True)
+    rua = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     telefone = models.CharField(max_length=15)
     senha = models.CharField(max_length=255) 
     plano = models.CharField(max_length=20, choices=PLANOS, default='basico')
-    max_profissionais = models.IntegerField(default=1)
+    max_profissionais = models.IntegerField(default=2)
     data_cadastro = models.DateTimeField(auto_now_add=True)
     trial_inicio = models.DateTimeField(auto_now_add=True)
     trial_fim = models.DateTimeField()
