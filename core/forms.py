@@ -8,6 +8,10 @@ from .models import Produto
 class SalaoCadastroForm(forms.Form):
     nome = forms.CharField(max_length=200, label='Nome da Barbearia *')
     nome_contato = forms.CharField(max_length=200, label='Nome do Contato *')
+    cep= forms.CharField(max_length=200, label='Cep*')
+    bairro = forms.CharField(max_length=200, label='Bairro *')
+    numero = forms.CharField(max_length=200, label='Número do salão *')
+    rua = forms.CharField(max_length=200, label='Nome da Rua*')
     telefone = forms.CharField(max_length=15, label='Telefone *')
     email = forms.EmailField(label='Email *')
     senha = forms.CharField(min_length=6, max_length=15, label='Senha *', widget=forms.PasswordInput())

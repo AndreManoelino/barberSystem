@@ -28,6 +28,10 @@ def cadastro_view(request):
                 salao = Salao.objects.create(
                     nome=form.cleaned_data['nome'],
                     nome_contato=form.cleaned_data['nome_contato'],
+                    cep=form.cleaned_data['cep'],
+                    bairro=form.cleaned_data['bairro'],
+                    numero=form.cleaned_data['numero'],
+                    rua=form.cleaned_data['rua'],
                     telefone=form.cleaned_data['telefone'],
                     email=email,
                     senha=senha_hash  # precisa ter esse campo no model
@@ -451,7 +455,7 @@ def editar_corte(request, id):
         'corte_editar': corte,
         'pagina':'cortes'
     })
-
+    
 
 def excluir_corte(request,id):
     salao_id = request.session.get("salao_id")
