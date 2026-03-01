@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Buscar Salão</title>
+
+<link rel="stylesheet" href="{% static 'assets/css/cliente/buscar_salao.css' %}">
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"/>
+
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="search-box">
+<h2>🔎 Buscar Salão</h2>
+
+<button onclick="toggleTheme()" style="
+padding:10px 18px;
+border-radius:10px;
+border:none;
+background:#6366f1;
+color:white;
+cursor:pointer;
+margin-bottom:15px;
+">
+🌙 Alternar tema
+</button>
+
+<form method="GET">
+<input type="text" name="q" placeholder="Digite nome ou CEP">
+<button type="submit">Buscar</button>
+</form>
+</div>
+
+<div class="results">
+
+{% for salao in saloes %}
+
+<div class="card"
+data-lat="{{ salao.latitude|default:'' }}"
+data-lng="{{ salao.longitude|default:'' }}"
+data-nome="{{ salao.nome }}"
+data-rua="{{ salao.rua }}"
+data-bairro="{{ salao.bairro }}">
+
+<h3>{{ salao.nome }}</h3>
+
+<p>{{ salao.rua }} - {{ salao.bairro }}</p>
+<p><strong>CEP:</strong> {{ salao.cep }}</p>
+
+<a class="btn-escolher"
+href="{% url 'escolher_salao' salao.id %}">
+✅ Escolher este salão
+</a>
+
+</div>
+
+{% empty %}
+<p class="no-result">Nenhum salão encontrado.</p>
+{% endfor %}
+
+</div>
+
+<!-- MAPA -->
+<div id="map"></div>
+
+</div>
+
+<script>
+
+/* ===== THEME ===== */
+
+function toggleTheme(){
+document.body.classList.toggle("dark");
+}
+
+/* ===== MAPA ===== */
+
+document.addEventListener("DOMContentLoaded",function(){
+
+const map=L.map("map",{zoomControl:true});
+
+/* Tiles ruas reais */
+
+L.tileLayer(
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+{
+maxZoom:19,
+attribution:"© OpenStreetMap"
+}
+).addTo(map);
+
+/* Centro inicial */
+
+map.setView([-14.2350,-51.9253],5);
+
+/* Cluster */
+
+const cluster=L.markerClusterGroup();
+
+/* Cards */
+
+document.querySelectorAll(".card").forEach(card=>{
+
+const lat=parseFloat(card.dataset.lat);
+const lng=parseFloat(card.dataset.lng);
+
+if(isNaN(lat)||isNaN(lng)) return;
+
+const marker=L.marker([lat,lng],{
+riseOnHover:true
+});
+
+const popup=`
+<div style="min-width:210px;padding:6px">
+<div style="font-weight:600;margin-bottom:6px">
+💈 ${card.dataset.nome||""}
+</div>
+
+<div style="font-size:13px;color:#555">
+📍 ${card.dataset.rua||""}<br>
+🏙️ ${card.dataset.bairro||""}
+</div>
+</div>
+`;
+
+marker.bindPopup(popup);
+
+marker.on("click",()=>{
+
+map.flyTo([lat,lng],17,{
+duration:1.4
+});
+
+});
+
+cluster.addLayer(marker);
+
+/* Card click */
+
+card.addEventListener("click",()=>{
+
+map.flyTo([lat,lng],17,{
+duration:1.4
+});
+
+setTimeout(()=>marker.openPopup(),300);
+
+});
+
+});
+
+map.addLayer(cluster);
+
+/* Geolocalização do usuário */
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(pos=>{
+
+const lat=pos.coords.latitude;
+const lng=pos.coords.longitude;
+
+map.flyTo([lat,lng],16);
+
+L.marker([lat,lng])
+.addTo(map)
+.bindPopup("📍 Você está aqui")
+.openPopup();
+
+});
+
+}
+
+setTimeout(()=>map.invalidateSize(),400);
+
+});
+
+</script>
+
+</body>
+</html>

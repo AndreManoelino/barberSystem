@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel do Cliente</title>
+    <link rel="stylesheet" href="{% static 'assets/css/cliente/menu_cliente.css' %}">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="profile">
+            <img src="{% static 'assets/img/default-user.png' %}" class="profile-img">
+            <h3>{{ salao.nome }}</h3>
+            <span>{{ salao.dono }}</span>
+            <small>📞 {{ salao.telefone }}</small>
+        </div>
+
+        <nav class="menu">
+            <a href="#">📅 Agendar</a>
+            <a href="#">🛍 Produtos</a>
+            <a href="#">❌ Desmarcar</a>
+            <a href="#">🔥 Promoções</a>
+            <a href="#">🎁 Brindes</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button onclick="toggleTheme()" class="theme-btn">🌙 Alternar Tema</button>
+            <a href="{% url 'home' %}" class="logout">🚪 Sair</a>
+        </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+            <div class="left">
+                <button class="toggle-btn" onclick="toggleMenu()">☰</button>
+                <h1>Dashboard</h1>
+            </div>
+
+            <div class="right">
+                <button class="settings-btn">⚙ Configurações</button>
+            </div>
+        </header>
+
+        <!-- CARDS RESUMO -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <h4>Agendamentos</h4>
+                <p>3 Ativos</p>
+            </div>
+
+            <div class="stat-card">
+                <h4>Pontos</h4>
+                <p>120 Pontos</p>
+            </div>
+
+            <div class="stat-card">
+                <h4>Promoções</h4>
+                <p>2 Disponíveis</p>
+            </div>
+
+            <div class="stat-card">
+                <h4>Compras</h4>
+                <p>5 Realizadas</p>
+            </div>
+
+        </section>
+
+        <!-- ATIVIDADES -->
+        <section class="activity">
+
+            <h2>Atividades Recentes</h2>
+
+            <div class="activity-card">
+                ✔ Corte agendado para amanhã às 14h
+            </div>
+
+            <div class="activity-card">
+                🎁 Você ganhou um brinde
+            </div>
+
+            <div class="activity-card">
+                🛍 Compra realizada com sucesso
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+function toggleMenu() {
+    document.getElementById("sidebar").classList.toggle("closed");
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+}
+
+window.onload = function() {
+    if(localStorage.getItem("theme") === "dark"){
+        document.body.classList.add("dark");
+    }
+}
+</script>
+
+</body>
+</html>

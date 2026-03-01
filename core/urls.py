@@ -28,6 +28,12 @@ urlpatterns = [
     path('cortes/editar/<int:id>/', views.editar_corte, name='editar_corte'),
     path('cortes/excluir/<int:id>/', views.excluir_corte, name='excluir_corte'),
     path('cortes/toggle/<int:id>/', views.toggle_corte, name='toggle_corte'),
-    
+
+
+    path('buscar-salao/', views.buscar_salao, name='buscar_salao'),
+    path('escolher-salao/<int:id>/', views.escolher_salao, name='escolher_salao'),
+    path('cadastro-cliente/', views.cadastro_cliente, name='cadastro_cliente'),
+    path('menu-cliente/', views.menu_cliente, name='menu_cliente'),
+    path('login-cliente/', views.login_cliente, name='login_cliente'),
     path('logout/', views.logout_view, name='logout'),
 ]

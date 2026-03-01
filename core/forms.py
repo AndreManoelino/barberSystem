@@ -1,9 +1,9 @@
 from django import forms
-from django import forms
 from django.contrib.auth.hashers import make_password
-from .models import Salao
+from .models import Salao, Usuario
 from .models import Profissional
 from .models import Produto
+from django.contrib.auth.forms import UserCreationForm
 
 class SalaoCadastroForm(forms.Form):
     nome = forms.CharField(max_length=200, label='Nome da Barbearia *')
@@ -51,3 +51,41 @@ class ProdutoForm(forms.ModelForm):
     class Meta:
         model = Produto
         fields = ['nome','valor','descricao','foto']
+
+
+from django import forms
+from .models import Usuario
+
+class ClienteCadastroForm(forms.ModelForm):
+    senha1 = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Senha"
+    )
+    senha2 = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Confirmar Senha"
+    )
+
+    class Meta:
+        model = Usuario
+        fields = ['nome', 'email']
+
+    def clean(self):
+        dados = super().clean()
+        senha1 = dados.get("senha1")
+        senha2 = dados.get("senha2")
+
+        if senha1 and senha2 and senha1 != senha2:
+            raise forms.ValidationError("As senhas não coincidem.")
+
+        return dados
+
+    def save(self, commit=True):
+        usuario = super().save(commit=False)
+        usuario.tipo = 'cliente'
+        usuario.salvar_senha(self.cleaned_data['senha1'])
+
+        if commit:
+            usuario.save()
+
+        return usuario

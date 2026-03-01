@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import SalaoCadastroForm
-from .models import DiaFuncionamento, Salao, Produto
+from .forms import ClienteCadastroForm, SalaoCadastroForm
+from .models import Cliente, DiaFuncionamento, Salao, Produto
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Profissional, Corte
 from .forms import ProfissionalForm
-
+from django.contrib.auth import authenticate, login
+from .models import Usuario
+from django.utils import timezone
+from datetime import timedelta
 def home(request):
     return render(request, 'home.html')
 
@@ -34,7 +37,8 @@ def cadastro_view(request):
                     rua=form.cleaned_data['rua'],
                     telefone=form.cleaned_data['telefone'],
                     email=email,
-                    senha=senha_hash  # precisa ter esse campo no model
+                    senha=senha_hash,
+                    trial_fim=timezone.now() + timedelta(days=30)
                 )
 
                 request.session['salao_id'] = salao.id
@@ -46,7 +50,7 @@ def cadastro_view(request):
             except Exception as e:
                 messages.error(request, f'❌ Erro: {str(e)}')
         else:
-            messages.error(request, '❌ Verifique os campos!')
+            print(form.errors)
     else:
         form = SalaoCadastroForm()
 
@@ -484,3 +488,99 @@ def toggle_corte(request, id):
             'ativo': corte.ativo
         })
     return JsonResponse({'erro': 'Metodo inválido'}, status=400)
+
+from django.db.models import Q
+
+def buscar_salao(request):
+    query = request.GET.get('q')
+
+    saloes = Salao.objects.none()
+    mapa_lat = None
+    mapa_lng = None
+
+    if query:
+        saloes = Salao.objects.filter(
+            Q(nome__icontains=query) |
+            Q(cep__icontains=query)
+        )
+
+        # Se encontrou salão, pega o primeiro para mapear
+        if saloes.exists():
+            salao = saloes.first()
+
+            mapa_lat = salao.latitude
+            mapa_lng = salao.longitude
+
+    return render(request, 'clientes/buscar_salao.html', {
+        'saloes': saloes,
+        'mapa_lat': mapa_lat,
+        'mapa_lng': mapa_lng
+    })
+from django.shortcuts import get_object_or_404, redirect
+
+def escolher_salao(request, id):
+    salao = get_object_or_404(Salao, id=id)
+
+    request.session['salao_cliente'] = salao.id
+
+    return redirect('cadastro_cliente')
+
+def cadastro_cliente(request):
+    salao_id = request.session.get('salao_cliente')
+
+    if not salao_id:
+        return redirect('buscar_salao')
+
+    if request.method == 'POST':
+        form = ClienteCadastroForm(request.POST)
+        if form.is_valid():
+            usuario = form.save()
+
+            Cliente.objects.create(
+                usuario=usuario,
+                telefone=request.POST.get('telefone')
+            )
+
+            request.session['usuario_id'] 
+    else:
+        form = ClienteCadastroForm()
+
+    return render(request, 'clientes/cadastro.html', {'form': form})
+
+
+from django.contrib.auth.decorators import login_required
+
+def menu_cliente(request):
+
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return redirect('login_cliente')
+
+    usuario = Usuario.objects.get(id=usuario_id)
+
+    return render(request, 'clientes/menu.html', {
+        'usuario': usuario
+    })
+def login_cliente(request):
+
+    if request.method == "POST":
+        email = request.POST.get("email")
+        senha = request.POST.get("senha")
+
+        try:
+            usuario = Usuario.objects.get(email=email, tipo='cliente')
+
+            if usuario.verificar_senha(senha):
+                request.session['usuario_id'] = usuario.id
+                return redirect('menu_cliente')
+            else:
+                messages.error(request, "Email ou senha inválidos")
+
+        except Usuario.DoesNotExist:
+            messages.error(request, "Email ou senha inválidos")
+
+    return render(request, 'clientes/login_cliente.html')
+
+
+

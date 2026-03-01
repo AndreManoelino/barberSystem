@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Cliente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow p-4 col-md-5 mx-auto">
+
+        <h3 class="text-center mb-4">Login Cliente</h3>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Senha</label>
+                <input type="password" name="senha" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">
+                Entrar
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <a href="{% url 'cadastro_cliente' %}">
+                Não tem conta? Cadastre-se
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
