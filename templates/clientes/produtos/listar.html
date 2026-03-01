@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Produtos</title>
+    <link rel="stylesheet" href="{% static 'assets/css/produtos/listar.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <h2>🛍 Produtos Disponíveis</h2>
+
+    <div class="grid">
+
+        {% for produto in produtos %}
+        <div class="card">
+
+            {% if produto.foto %}
+                <img src="{{ produto.foto.url }}" alt="{{ produto.nome }}">
+            {% else %}
+                <div class="no-image">Sem imagem</div>
+            {% endif %}
+
+            <h3>{{ produto.nome }}</h3>
+
+            <p class="valor">R$ {{ produto.valor }}</p>
+
+        </div>
+        {% empty %}
+            <p>Nenhum produto disponível.</p>
+        {% endfor %}
+
+    </div>
+
+    <div class="voltar">
+        <a href="{% url 'menu_cliente' %}">⬅ Voltar</a>
+    </div>
+
+</div>
+
+</body>
+</html>

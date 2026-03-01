@@ -49,7 +49,6 @@ class Salao(models.Model):
                 "bairro"
             ])
 
-            super().save(update_fields=["latitude", "longitude"])
             
     def trial_ativo(self):
         return timezone.now() <= self.trial_fim if self.trial_fim else False
@@ -69,75 +68,55 @@ class Salao(models.Model):
             }
 
             # ===============================
-            # STEP 1 → Buscar CEP BrasilAPI
+            # STEP 1 → Buscar endereço BrasilAPI
             # ===============================
 
-            try:
-                url = f"https://brasilapi.com.br/api/cep/v1/{cep_limpo}"
+            url = f"https://brasilapi.com.br/api/cep/v1/{cep_limpo}"
 
-                response = requests.get(url, timeout=10, headers=headers)
+            response = requests.get(url, timeout=10, headers=headers)
 
-                if response.status_code == 200:
-                    data = response.json()
+            if response.status_code != 200:
+                return
 
-                    # Latitude / Longitude se existir
-                    if "location" in data and data["location"]:
-                        coords = data["location"]["coordinates"]
+            data = response.json()
 
-                        self.latitude = float(coords["latitude"])
-                        self.longitude = float(coords["longitude"])
+            rua = data.get("street", "")
+            bairro = data.get("neighborhood", "")
+            cidade = data.get("city", "")
+            estado = data.get("state", "")
 
-                        # Atualiza endereço também
-                        self.rua = data.get("street", self.rua)
-                        self.bairro = data.get("neighborhood", self.bairro)
-
-                        return
-
-            except Exception:
-                pass
+            # Atualiza campos
+            self.rua = rua or self.rua
+            self.bairro = bairro or self.bairro
 
             # ===============================
-            # STEP 2 → Fallback OpenStreetMap
+            # STEP 2 → Geocode com endereço completo
             # ===============================
 
-            query = f"{cep_limpo}, Brazil"
+            endereco_completo = f"{rua}, {bairro}, {cidade}, {estado}, Brasil"
 
             url = "https://nominatim.openstreetmap.org/search"
 
             params = {
-                "q": query,
+                "q": endereco_completo,
                 "format": "json",
                 "limit": 1,
-                "addressdetails": 1
+                "countrycodes": "br"
             }
 
-            response = requests.get(
+            geo_response = requests.get(
                 url,
                 params=params,
                 headers=headers,
                 timeout=10
             )
 
-            if response.status_code == 200:
+            if geo_response.status_code == 200:
+                geo_data = geo_response.json()
 
-                data = response.json()
-
-                if data:
-
-                    result = data[0]
-
-                    self.latitude = float(result["lat"])
-                    self.longitude = float(result["lon"])
-
-                    # Reverse geocode detalhes
-                    address = result.get("display_name", "")
-
-                    parts = address.split(",")
-
-                    if len(parts) > 1:
-                        self.bairro = parts[1].strip()
-
-                    return
+                if geo_data:
+                    self.latitude = float(geo_data[0]["lat"])
+                    self.longitude = float(geo_data[0]["lon"])
 
         except Exception as e:
             print("🔥 ERRO GEO:", e)
@@ -256,3 +235,41 @@ class Cliente(models.Model):
 
     def __str__(self):
         return self.usuario.nome
+    
+from django.db import models
+from datetime import datetime, timedelta
+from django.core.exceptions import ValidationError
+
+
+class Agendamento(models.Model):
+    STATUS = [
+        ('agendado', 'Agendado'),
+        ('cancelado', 'Cancelado'),
+        ('concluido', 'Concluído'),
+    ]
+
+    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='agendamentos')
+    cliente = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    profissional = models.ForeignKey(Profissional, on_delete=models.CASCADE)
+    corte = models.ForeignKey(Corte, on_delete=models.CASCADE)
+
+    data = models.DateField()
+    hora_inicio = models.TimeField()
+    hora_fim = models.TimeField()
+
+    status = models.CharField(max_length=20, choices=STATUS, default='agendado')
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['data', 'hora_inicio']
+
+    def clean(self):
+        if self.profissional.salao != self.salao:
+            raise ValidationError("Profissional não pertence ao salão.")
+
+        if self.corte.salao != self.salao:
+            raise ValidationError("Corte não pertence ao salão.")
+
+    def __str__(self):
+        return f"{self.cliente} - {self.data} {self.hora_inicio}"

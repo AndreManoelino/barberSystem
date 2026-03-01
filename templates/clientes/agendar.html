@@ -1,0 +1,172 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'assets/css/cliente/agendar.css' %}">
+
+<div class="agendamento-container">
+
+    <div class="card-agendar">
+        <h2>📅 Agendar Horário</h2>
+
+        <form method="POST" id="formAgendamento">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Profissional</label>
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <select name="profissional" id="profissional" required>
+                        <option value="">Selecione</option>
+                        {% for p in profissionais %}
+                            <option 
+                                value="{{ p.id }}" 
+                                data-foto="{% if p.foto %}{{ p.foto.url }}{% endif %}">
+                                {{ p.nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <img id="fotoProfissional" 
+                        src="" 
+                        style="width:70px;height:70px;border-radius:50%;object-fit:cover;display:none;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Corte</label>
+
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <select name="corte" id="corte" required>
+                        <option value="">Selecione</option>
+                        {% for c in cortes %}
+                            <option 
+                                value="{{ c.id }}"
+                                data-foto="{% if c.foto %}{{ c.foto.url }}{% endif %}">
+                                {{ c.nome }} - R$ {{ c.valor }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <img id="fotoCorte"
+                        src=""
+                        style="width:70px;height:70px;border-radius:12px;object-fit:cover;display:none;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Data</label>
+                <input type="date" name="data" id="data" required>
+            </div>
+
+            <div class="form-group">
+                <label>Horário</label>
+                <select name="hora" id="hora" required>
+                    <option value="">Selecione profissional, corte e data</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-agendar">
+                Confirmar Agendamento
+            </button>
+        </form>
+    </div>
+
+
+    <div class="card-agendamentos">
+        <h3>📌 Meus Agendamentos</h3>
+
+        {% if agendamentos %}
+            <div class="lista-agendamentos">
+                {% for agendamento in agendamentos %}
+                    <div class="item-agendamento">
+                        <div class="info">
+                            <strong>{{ agendamento.corte.nome }}</strong>
+                            <span>👨‍🔧 {{ agendamento.profissional.nome }}</span>
+                            <span>📅 {{ agendamento.data }}</span>
+                            <span>⏰ {{ agendamento.hora_inicio }}</span>
+                        </div>
+
+                        <div class="status {{ agendamento.status }}">
+                            {{ agendamento.get_status_display }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="sem-agendamento">Você ainda não possui agendamentos.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+
+<script>
+function buscarHorarios() {
+
+    let profissional = document.getElementById("profissional").value;
+    let corte = document.getElementById("corte").value;
+    let data = document.getElementById("data").value;
+    let selectHora = document.getElementById("hora");
+
+    if (profissional && corte && data) {
+
+        fetch(`/horarios/?profissional=${profissional}&corte=${corte}&data=${data}`)
+        .then(response => response.json())
+        .then(data => {
+
+            selectHora.innerHTML = "";
+
+            if (data.horarios.length === 0) {
+                let option = document.createElement("option");
+                option.value = "";
+                option.text = "Sem horários disponíveis";
+                option.disabled = true;
+                option.selected = true;
+                selectHora.appendChild(option);
+                return;
+            }
+
+            data.horarios.forEach(horario => {
+                let option = document.createElement("option");
+                option.value = horario;
+                option.text = horario;
+                selectHora.appendChild(option);
+            });
+        });
+    }
+}
+const selectProfissional = document.getElementById("profissional");
+const fotoProfissional = document.getElementById("fotoProfissional");
+
+selectProfissional.addEventListener("change", function () {
+
+    let selectedOption = this.options[this.selectedIndex];
+    let foto = selectedOption.getAttribute("data-foto");
+
+    if (foto) {
+        fotoProfissional.src = foto;
+        fotoProfissional.style.display = "block";
+    } else {
+        fotoProfissional.style.display = "none";
+    }
+
+    buscarHorarios();
+});
+const selectCorte = document.getElementById("corte");
+const fotoCorte = document.getElementById("fotoCorte");
+
+selectCorte.addEventListener("change", function () {
+
+    let selectedOption = this.options[this.selectedIndex];
+    let foto = selectedOption.getAttribute("data-foto");
+
+    if (foto) {
+        fotoCorte.src = foto;
+        fotoCorte.style.display = "block";
+    } else {
+        fotoCorte.style.display = "none";
+    }
+
+    buscarHorarios();
+});
+document.getElementById("profissional").addEventListener("change", buscarHorarios);
+document.getElementById("corte").addEventListener("change", buscarHorarios);
+document.getElementById("data").addEventListener("change", buscarHorarios);
+</script>

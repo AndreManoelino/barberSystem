@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('', include('core.urls')),
+    path('cliente/', include('cliente.urls')),  
 ]
 
 # 👇 ISSO AQUI É O QUE FALTAVA

@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.4s;
+}
+
+/* ================= DARK MODE ================= */
+
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #ffffff;
+}
+
+.main-wrapper {
+    width: 100%;
+    padding: 20px;
+}
+
+.card-custom {
+    background: #111827;
+    padding: 45px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 480px;
+    margin: auto;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    border: 1px solid #1f2937;
+}
+
+.logo-area {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.logo-area img {
+    width: 120px;
+}
+
+h3 {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #ffffff;
+}
+
+label {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #e5e7eb;
+}
+
+.form-control {
+    background: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    color: #ffffff !important;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.form-control:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.4) !important;
+    background: #1f2937 !important;
+    color: #fff !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(99,102,241,0.5);
+}
+
+.links {
+    margin-top: 25px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.links a {
+    color: #a5b4fc;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.links a:hover {
+    color: #ffffff;
+}
+
+.toggle-btn {
+    margin-top: 25px;
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #374151;
+    border-radius: 10px;
+    color: #9ca3af;
+    transition: 0.3s;
+}
+
+.toggle-btn:hover {
+    border-color: #6366f1;
+    color: #fff;
+}
+
+/* ================= LIGHT MODE ================= */
+
+body.light {
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    color: #111827;
+}
+
+body.light .card-custom {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+body.light h3 {
+    color: #111827;
+}
+
+body.light label {
+    color: #374151;
+}
+
+body.light .form-control {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+}
+
+body.light .form-control:focus {
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.2) !important;
+}
+
+/* ================= RESPONSIVO ================= */
+
+@media (max-width: 576px) {
+    .card-custom {
+        padding: 30px;
+    }
+}

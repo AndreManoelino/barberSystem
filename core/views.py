@@ -531,23 +531,37 @@ def cadastro_cliente(request):
     if not salao_id:
         return redirect('buscar_salao')
 
+    salao = Salao.objects.get(id=salao_id)
+
     if request.method == 'POST':
         form = ClienteCadastroForm(request.POST)
+
         if form.is_valid():
-            usuario = form.save()
+            usuario = form.save(commit=False)
+
+            usuario.tipo = 'cliente'
+            usuario.salao = salao
+
+            # 🔥 usa senha1
+            usuario.salvar_senha(form.cleaned_data['senha1'])
+
+            usuario.save()
 
             Cliente.objects.create(
                 usuario=usuario,
                 telefone=request.POST.get('telefone')
             )
 
-            request.session['usuario_id'] 
+            request.session['usuario_id'] = usuario.id
+
+            return redirect('menu_cliente')
+
     else:
         form = ClienteCadastroForm()
 
     return render(request, 'clientes/cadastro.html', {'form': form})
 
-
+    return render(request, 'clientes/cadastro.html', {'form': form})
 from django.contrib.auth.decorators import login_required
 
 def menu_cliente(request):
@@ -584,3 +598,76 @@ def login_cliente(request):
 
 
 
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from datetime import datetime
+from core.models import Profissional, Corte, Agendamento, Salao
+from core.utils import gerar_horarios_disponiveis
+
+
+def agendar(request):
+
+    usuario_id = request.session.get('usuario_id')
+    salao_id = request.session.get('salao_cliente')
+
+    if not usuario_id or not salao_id:
+        return redirect('login')
+
+    salao = Salao.objects.get(id=salao_id)
+
+    profissionais = salao.profissionais.filter(ativo=True)
+    cortes = salao.cortes.filter(ativo=True)
+
+    if request.method == 'POST':
+
+        profissional_id = request.POST.get('profissional')
+        corte_id = request.POST.get('corte')
+        data = request.POST.get('data')
+        hora = request.POST.get('hora')
+        if not profissional_id or not corte_id or not data or not hora:
+            return redirect('agendar')
+
+        profissional = Profissional.objects.get(id=profissional_id)
+        corte = Corte.objects.get(id=corte_id)
+
+        data_obj = datetime.strptime(data, "%Y-%m-%d").date()
+        hora_obj = datetime.strptime(hora, "%H:%M").time()
+        duracao_total = corte.tempo_execucao + 10
+        hora_fim = (datetime.combine(data_obj, hora_obj) + timedelta(minutes=duracao_total)).time()
+
+        Agendamento.objects.create(
+            salao=salao,
+            cliente_id=usuario_id,
+            profissional=profissional,
+            corte=corte,
+            data=data_obj,
+            hora_inicio=hora_obj,
+            hora_fim=hora_fim,
+        )
+
+        return redirect('menu_cliente')
+
+    return render(request, 'clientes/agendar.html', {
+        'profissionais': profissionais,
+        'cortes': cortes,
+    })
+
+
+
+def horarios_disponiveis(request):
+
+    salao_id = request.session.get('salao_cliente')
+
+    profissional_id = request.GET.get('profissional')
+    corte_id = request.GET.get('corte')
+    data = request.GET.get('data')
+
+    salao = Salao.objects.get(id=salao_id)
+    profissional = Profissional.objects.get(id=profissional_id)
+    corte = Corte.objects.get(id=corte_id)
+
+    data_obj = datetime.strptime(data, "%Y-%m-%d").date()
+
+    horarios = gerar_horarios_disponiveis(salao, profissional, data_obj, corte)
+
+    return JsonResponse({'horarios': horarios})

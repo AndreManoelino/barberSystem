@@ -1,14 +1,30 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Cliente</title>
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- CSS PERSONALIZADO -->
+    <link rel="stylesheet" href="{% static 'assets/css/cliente/cadastro.css' %}">
 </head>
+
 <body>
 
-<div class="container mt-5">
-    <div class="card shadow p-4">
-        <h3 class="mb-4 text-center">Cadastro de Cliente</h3>
+<div class="main-wrapper">
+
+    <div class="card-custom">
+
+        <!-- LOGO -->
+        <div class="logo-area">
+            <img src="{% static 'img/logo.jpeg' %}" alt="Logo">
+        </div>
+
+        <h3>Cadastro de Cliente</h3>
 
         <form method="POST">
             {% csrf_token %}
@@ -38,22 +54,31 @@
                 <input type="text" name="telefone" class="form-control" required>
             </div>
 
-            <button type="submit" class="btn btn-danger w-100">
+            <button type="submit" class="btn btn-primary w-100">
                 Cadastrar
             </button>
         </form>
 
-        <div class="text-center mt-3">
+        <div class="links">
             <a href="{% url 'buscar_salao' %}">Voltar</a>
-        </div>
-        <div class="text-center mt-3">
             <a href="{% url 'login_cliente' %}">
                 Já tem conta? Fazer login
             </a>
         </div>
-        
+
+        <button onclick="toggleTheme()" class="toggle-btn">
+            Alternar tema
+        </button>
+
     </div>
+
 </div>
+
+<script>
+function toggleTheme(){
+    document.body.classList.toggle("light");
+}
+</script>
 
 </body>
 </html>

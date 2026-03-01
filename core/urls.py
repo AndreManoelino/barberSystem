@@ -35,5 +35,7 @@ urlpatterns = [
     path('cadastro-cliente/', views.cadastro_cliente, name='cadastro_cliente'),
     path('menu-cliente/', views.menu_cliente, name='menu_cliente'),
     path('login-cliente/', views.login_cliente, name='login_cliente'),
+    path('agendar/', views.agendar, name='agendar'),
+    path('horarios/', views.horarios_disponiveis, name='horarios_disponiveis'),
     path('logout/', views.logout_view, name='logout'),
 ]
